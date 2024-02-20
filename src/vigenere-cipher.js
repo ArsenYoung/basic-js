@@ -20,13 +20,77 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  direct
+  alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  constructor(direct = true) {
+      this.direct = direct;
   }
-  decrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  encrypt(string, key) {
+      if ((arguments.length !== 2) || (typeof string !== 'string') || (typeof key !== 'string')) {
+          throw new Error("Incorrect arguments!");
+      }
+
+      if (string === '') {
+          return string;
+      }
+
+      let upperString = string.toUpperCase();
+      let upperKey = key.toUpperCase();
+      let encryptedString = [];
+
+      for (let i = 0, k = 0; i < upperString.length; i++) {
+          if (k === upperKey.length) {
+              k = 0;
+          }
+
+          if (this.alphabet.includes(upperString[i])) {
+              let newLetterIndex = (this.alphabet.indexOf(upperString[i]) + this.alphabet.indexOf(upperKey[k])) % 26;
+              encryptedString.push(this.alphabet[newLetterIndex]);
+              k++;
+          } else {
+              encryptedString.push(upperString[i]);
+          }
+      }
+
+      return this.returnResult(encryptedString);
+  }
+  decrypt(string, key) {
+      if ((arguments.length !== 2) || (typeof string !== 'string') || (typeof key !== 'string')) {
+          throw new Error("Incorrect arguments!");
+      }
+
+      if (string === '') {
+          return string;
+      }
+
+      let upperString = string.toUpperCase();
+      let upperKey = key.toUpperCase();
+      let decryptedString = [];
+
+      for (let i = 0, k = 0; i < upperString.length; i++) {
+          if (k === upperKey.length) {
+              k = 0;
+          }
+
+          if (this.alphabet.includes(upperString[i])) {
+              let newLetterIndex = this.alphabet.indexOf(upperString[i]) - (this.alphabet.indexOf(upperKey[k])) % 26;
+              if (newLetterIndex < 0) {
+                  newLetterIndex += this.alphabet.length;
+              }
+              decryptedString.push(this.alphabet[newLetterIndex]);
+              k++;
+          } else {
+              decryptedString.push(upperString[i]);
+          }
+      }
+
+      return this.returnResult(decryptedString);
+  }
+  returnResult(string) {
+      if (this.direct)
+          return string.join('');
+      else
+          return string.reverse().join('');
   }
 }
 
